@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { setAuthToken } from "../api/apiClient";
 
 const AuthForm = ({ mode }) => {
   const [formData, setFormData] = useState({
@@ -27,10 +28,10 @@ const AuthForm = ({ mode }) => {
       });
 
       const data = await response.json();
-      console.log("datatataa: ", data);
 
       if (data.token) {
         localStorage.setItem("token", data.token);
+        setAuthToken(data.token);
         navigate("/kanban");
       } else {
         alert("Authentication failed");
