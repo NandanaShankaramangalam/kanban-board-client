@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CreateBoard from "./createBoard";
-import { io } from "socket.io-client";
 import apiClient from "../../api/apiClient";
 import { useNavigate } from "react-router-dom";
-
-const socket = io("http://localhost:3000", { transports: ["websocket"] });
 
 const BoardManager = () => {
   const [boards, setBoards] = useState([]);

@@ -3,8 +3,7 @@ import { io } from "socket.io-client";
 import dayjs from "dayjs";
 import apiClient from "../../api/apiClient";
 import { getSelectedBoardInfo } from "../../utils/utils";
-
-const socket = io("http://localhost:3000", { transports: ["websocket"] });
+import socket from "../../socket/socket";
 
 const Chat = ({ userId }) => {
   const [messages, setMessages] = useState([]);

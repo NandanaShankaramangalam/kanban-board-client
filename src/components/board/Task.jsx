@@ -2,10 +2,7 @@ import { useState } from "react";
 import AddTask from "./Addtask.jsx";
 import TasksContainer from "./Taskscontainer.jsx";
 import io from "socket.io-client";
-
-const socket = io("http://localhost:3000", {
-  transports: ["websocket"],
-});
+import socket from "../../socket/socket.js";
 
 const Task = () => {
   const [newTask, setNewTask] = useState();
