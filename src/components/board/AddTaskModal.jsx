@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
+import { getSelectedBoardInfo } from "../../utils/utils";
 
 const AddTaskModal = ({ socket, onClose, handleAddTask }) => {
   const [title, setTitle] = useState("");
@@ -8,7 +9,9 @@ const AddTaskModal = ({ socket, onClose, handleAddTask }) => {
   const [assignee, setAssignee] = useState({});
   const [users, setUsers] = useState([]);
   const url = window.location.href;
-  const boardId = url.split("/").pop();
+  // const boardId = url.split("/").pop();
+  const boardInfo = getSelectedBoardInfo();
+  const boardId = boardInfo?.id;
 
   const columns = ["to_do", "in_progress", "done"];
 

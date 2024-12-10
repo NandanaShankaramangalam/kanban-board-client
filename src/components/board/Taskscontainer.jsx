@@ -3,14 +3,17 @@ import { Link } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import apiClient from "../../api/apiClient";
 import TaskViewAndEditModal from "./TaskViewAndEditModal";
+import { getSelectedBoardInfo } from "../../utils/utils";
 
 const TasksContainer = ({ socket }) => {
   const [tasks, setTasks] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [boardUsers, setBoardUsers] = useState([]);
-  const url = window.location.href;
-  const boardId = url.split("/").pop();
+  // const url = window.location.href;
+  // const boardId = url.split("/").pop();
+  const boardInfo = getSelectedBoardInfo();
+  const boardId = boardInfo?.id;
 
   useEffect(() => {
     fetchUsersInBoard();
@@ -129,6 +132,7 @@ const TasksContainer = ({ socket }) => {
       handleCloseModal();
     }
   };
+
   return (
     <div className="container">
       <DragDropContext onDragEnd={handleDragEnd}>

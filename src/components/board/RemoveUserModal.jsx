@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
 import { getSelectedBoardInfo } from "../../utils/utils";
 
-const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
+const RemoveUserModal = ({ isVisible, onClose, onRemoveUsers }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState([]);
@@ -35,17 +35,25 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
     setSelectedUsers((prev) => prev.filter((u) => u !== user));
   };
 
-  const handleAdd = () => {
-    onAddUsers(selectedUsers, boardId);
+  const handleRemove = () => {
+    onRemoveUsers(selectedUsers, boardId);
     onClose();
   };
 
   const fetchUsers = async () => {
     try {
       const response = await apiClient.get(
-        `${process.env.REACT_APP_BASE_URL}/api/board/${boardId}/users/not-assigned`
+        `${process.env.REACT_APP_BASE_URL}/api/board/${boardId}/users`
       );
-      setUsers(response.data);
+
+      const allUsers = response?.data?.users || [];
+      const currentUser = JSON.parse(localStorage.getItem("user")); // Assuming you store the current user ID in localStorage
+      console.log("cuuuuuuuuuuu:::", currentUser);
+
+      const filteredUsers = allUsers.filter(
+        (user) => user.id !== currentUser?.id
+      );
+      setUsers(filteredUsers);
     } catch (err) {
       console.log(err);
     }
@@ -62,7 +70,7 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
         >
           ×
         </button>
-        <h2 className="text-xl font-semibold mb-4">Add People to Board</h2>
+        <h2 className="text-xl font-semibold mb-4">Remove People from Board</h2>
         {users?.length ? (
           <>
             <input
@@ -72,7 +80,6 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
               onChange={handleSearch}
               className="w-full p-2 border border-gray-300 rounded mb-4 text-black"
             />
-
             <div className="space-y-2">
               {users
                 .filter((user) =>
@@ -101,7 +108,6 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
                   </div>
                 ))}
             </div>
-
             <div className="mt-4 flex justify-end">
               <button
                 className="px-4 py-2 bg-gray-300 rounded mr-2"
@@ -110,16 +116,16 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
                 Cancel
               </button>
               <button
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-                onClick={handleAdd}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+                onClick={handleRemove}
               >
-                Add
+                Remove
               </button>
             </div>
           </>
         ) : (
           <div className="text-center text-gray-500">
-            No users available to add
+            No users available to remove
           </div>
         )}
       </div>
@@ -127,4 +133,4 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
   );
 };
 
-export default AddUserModal;
+export default RemoveUserModal;
