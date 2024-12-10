@@ -5,8 +5,6 @@ import { getSelectedBoardInfo } from "../../utils/utils";
 
 const Addtask = ({ socket, setNewTask }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const url = window.location.href;
-  //   const boardId = url.split("/").pop();
   const boardInfo = getSelectedBoardInfo();
   const boardId = boardInfo?.id;
 
@@ -40,7 +38,7 @@ const Addtask = ({ socket, setNewTask }) => {
       {boardInfo?.name && (
         <div className="mb-2 me-4">
           <span className="bg-blue-400 text-white px-4 py-2 rounded-full text-sm font-semibold">
-          {boardInfo?.name}
+            {boardInfo?.name}
           </span>
         </div>
       )}
