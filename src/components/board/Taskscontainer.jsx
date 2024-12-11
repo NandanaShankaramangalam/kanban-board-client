@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import apiClient from "../../api/apiClient";
 import TaskViewAndEditModal from "./TaskViewAndEditModal";
@@ -10,10 +10,9 @@ const TasksContainer = ({ socket }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [boardUsers, setBoardUsers] = useState([]);
-  // const url = window.location.href;
-  // const boardId = url.split("/").pop();
   const boardInfo = getSelectedBoardInfo();
   const boardId = boardInfo?.id;
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUsersInBoard();
@@ -93,6 +92,9 @@ const TasksContainer = ({ socket }) => {
       setTasks(response?.data);
     } catch (err) {
       console.error("Error fetching tasks:", err);
+      if (err?.response?.status === 403) {
+        navigate("/kanban");
+      }
     }
   };
 
@@ -116,6 +118,9 @@ const TasksContainer = ({ socket }) => {
       socket.emit("taskUpdated", response.data);
     } catch (error) {
       console.error("Error saving task:", error);
+      if (error?.response?.status === 403) {
+        navigate("/kanban");
+      }
     } finally {
       handleCloseModal();
     }
@@ -128,6 +133,9 @@ const TasksContainer = ({ socket }) => {
       socket.emit("taskUpdated", response.data);
     } catch (error) {
       console.error("Error saving task:", error);
+      if (error?.response?.status === 403) {
+        navigate("/kanban");
+      }
     } finally {
       handleCloseModal();
     }

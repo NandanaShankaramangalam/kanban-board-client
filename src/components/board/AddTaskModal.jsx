@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
 import { getSelectedBoardInfo } from "../../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 const AddTaskModal = ({ socket, onClose, handleAddTask }) => {
   const [title, setTitle] = useState("");
@@ -8,10 +9,9 @@ const AddTaskModal = ({ socket, onClose, handleAddTask }) => {
   const [column, setColumn] = useState("to_do");
   const [assignee, setAssignee] = useState({});
   const [users, setUsers] = useState([]);
-  const url = window.location.href;
-  // const boardId = url.split("/").pop();
   const boardInfo = getSelectedBoardInfo();
   const boardId = boardInfo?.id;
+  const navigate = useNavigate();
 
   const columns = ["to_do", "in_progress", "done"];
 
@@ -27,6 +27,9 @@ const AddTaskModal = ({ socket, onClose, handleAddTask }) => {
       setUsers(response?.data?.users || []);
     } catch (err) {
       console.error("Error fetching users:", err);
+      if (err?.response?.status === 403) {
+        navigate("/kanban");
+      }
     }
   };
 

@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import dayjs from "dayjs";
 import apiClient from "../../api/apiClient";
-import { getSelectedBoardInfo } from "../../utils/utils";
+import { getSelectedBoardInfo, Spinner } from "../../utils/utils";
 import socket from "../../socket/socket";
+import { useNavigate } from "react-router-dom";
 
 const Chat = ({ userId }) => {
   const [messages, setMessages] = useState([]);
@@ -11,13 +12,20 @@ const Chat = ({ userId }) => {
   const [showMentions, setShowMentions] = useState(false);
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [selectedMentions, setSelectedMentions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const boardInfo = getSelectedBoardInfo();
   const boardId = boardInfo?.id;
+  const navigate = useNavigate();
   const mentionDropdownRef = useRef();
   const currentUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     handleFetchMessage();
+
+    socket.on("connect", () => {
+      console.log("Connected to the server");
+    });
 
     socket.emit("joinBoard", boardId);
 
@@ -25,10 +33,16 @@ const Chat = ({ userId }) => {
       setMessages((prevMessages) => [newMessage, ...prevMessages]);
     });
 
+    socket.on("disconnect", (reason) => {
+      console.log(`Disconnected from the server: ${reason}`);
+    });
+
     return () => {
       socket.off("newMessage");
+      socket.off("connect");
+      socket.off("disconnect");
     };
-  }, [boardId]);
+  }, [boardId, socket]);
 
   useEffect(() => {
     if (showMentions && mentionDropdownRef.current) {
@@ -57,10 +71,10 @@ const Chat = ({ userId }) => {
         boardId,
         userId,
         message,
-        mentions,
+        mentions: selectedMentions,
       };
 
-      if (mentions.includes("AI")) {
+      if (selectedMentions.includes("AI")) {
         await apiClient.post(
           `${process.env.REACT_APP_BASE_URL}/api/messages/ai-bot/${boardId}`,
           newMessage
@@ -73,8 +87,13 @@ const Chat = ({ userId }) => {
       }
 
       setMessage("");
+      setSelectedMentions([]);
+      setShowMentions(false);
     } catch (error) {
       console.error("Error sending message:", error);
+      if (error?.response?.status === 403) {
+        navigate("/kanban");
+      }
     }
   };
 
@@ -95,6 +114,11 @@ const Chat = ({ userId }) => {
       setUsers([...usersResponse?.data?.users, aiBot]);
     } catch (err) {
       console.error(err);
+      if (err?.response?.status === 403) {
+        navigate("/kanban");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,6 +146,7 @@ const Chat = ({ userId }) => {
     const words = message.split(" ");
     words.pop();
     setMessage([...words, `@${username} `].join(" "));
+    setSelectedMentions((prev) => [...prev, username]);
     setShowMentions(false);
   };
 
@@ -150,7 +175,9 @@ const Chat = ({ userId }) => {
           ref={scrollContainerRef}
           className="overflow-y-auto max-h-96 mb-4 p-2 border border-gray-200 rounded-lg min-h-[400px]"
         >
-          {messages.length === 0 ? (
+          {loading ? (
+            <Spinner />
+          ) : messages.length === 0 ? (
             <div className="text-center text-gray-500 p-4 mt-20">
               No messages yet. Be the first to start the conversation!
             </div>

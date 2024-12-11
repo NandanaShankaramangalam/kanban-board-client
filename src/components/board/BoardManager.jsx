@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import CreateBoard from "./createBoard";
 import apiClient from "../../api/apiClient";
 import { useNavigate } from "react-router-dom";
+import { Spinner } from "../../utils/utils";
 
 const BoardManager = () => {
   const [boards, setBoards] = useState([]);
   const [selectedBoard, setSelectedBoard] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,10 +15,16 @@ const BoardManager = () => {
   }, []);
 
   const fetchBoards = async () => {
-    const response = await apiClient.get(
-      `${process.env.REACT_APP_BASE_URL}/api/board`
-    );
-    setBoards(response.data);
+    try {
+      const response = await apiClient.get(
+        `${process.env.REACT_APP_BASE_URL}/api/board`
+      );
+      setBoards(response.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBoardCreated = (newBoard) => {
@@ -27,13 +35,15 @@ const BoardManager = () => {
     <div className="p-4">
       <CreateBoard onBoardCreated={handleBoardCreated} />
       <div className="mt-4">
-        {boards?.length ? (
+        {loading ? (
+          <Spinner />
+        ) : boards?.length ? (
           <>
             <h2 className="text-lg font-bold">Available Boards:</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {boards.map((board) => (
                 <div
-                  className="cursor-pointer border border-gray-300 rounded overflow-hidden bg-white shadow-lg"
+                  className="cursor-pointer border border-gray-300 rounded overflow-hidden bg-white shadow-lg relative"
                   key={board._id}
                   onClick={() => {
                     setSelectedBoard(board);
@@ -48,6 +58,9 @@ const BoardManager = () => {
                     <div className="font-bold text-xl mb-2 text-center">
                       {board?.name}
                     </div>
+                  </div>
+                  <div className="absolute bottom-2 left-2 text-gray-500 text-xs font-medium">
+                    <span>Created by {board.ownerName}</span>
                   </div>
                 </div>
               ))}

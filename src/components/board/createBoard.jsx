@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import apiClient from "../../api/apiClient";
 
 const CreateBoard = ({ onBoardCreated }) => {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const formik = useFormik({
     initialValues: {
       boardName: "",
@@ -12,6 +14,8 @@ const CreateBoard = ({ onBoardCreated }) => {
       boardName: Yup.string().trim().required("Board name is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
+      setLoading(true);
+      setErrorMessage("");
       try {
         const response = await apiClient.post(
           `${process.env.REACT_APP_BASE_URL}/api/board`,
@@ -23,7 +27,15 @@ const CreateBoard = ({ onBoardCreated }) => {
         resetForm();
       } catch (error) {
         console.error("Error creating board:", error);
-        alert("Failed to create board");
+        if (error.response && error.response.status === 400) {
+          setErrorMessage(
+            error.response.data.message || "Board name already exists."
+          );
+        } else {
+          setErrorMessage("Failed to create board. Please try again.");
+        }
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -46,10 +58,16 @@ const CreateBoard = ({ onBoardCreated }) => {
         {formik.touched.boardName && formik.errors.boardName ? (
           <div className="text-red-500 text-sm">{formik.errors.boardName}</div>
         ) : null}
+        {errorMessage && (
+          <div className="text-red-500 text-sm">{errorMessage}</div>
+        )}
       </div>
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className={`bg-blue-500 text-white px-4 py-2 rounded flex items-center justify-center ${
+          loading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        disabled={loading}
       >
         Create Board
       </button>

@@ -6,10 +6,8 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState([]);
-  const url = window.location.href;
   const boardInfo = getSelectedBoardInfo();
   const boardId = boardInfo?.id;
-//   const boardId = url.split("/").pop();
 
   useEffect(() => {
     if (isVisible) {
@@ -37,6 +35,7 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
 
   const handleAdd = () => {
     onAddUsers(selectedUsers, boardId);
+    setSearchTerm("");
     onClose();
   };
 
@@ -73,7 +72,7 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
               className="w-full p-2 border border-gray-300 rounded mb-4 text-black"
             />
 
-            <div className="space-y-2">
+            <div className="max-h-60 overflow-y-auto space-y-2">
               {users
                 .filter((user) =>
                   user?.username
@@ -105,7 +104,10 @@ const AddUserModal = ({ isVisible, onClose, onAddUsers }) => {
             <div className="mt-4 flex justify-end">
               <button
                 className="px-4 py-2 bg-gray-300 rounded mr-2"
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  setSearchTerm("");
+                }}
               >
                 Cancel
               </button>

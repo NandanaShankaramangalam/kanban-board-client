@@ -9,7 +9,6 @@ const RemoveUserModal = ({ isVisible, onClose, onRemoveUsers }) => {
   const url = window.location.href;
   const boardInfo = getSelectedBoardInfo();
   const boardId = boardInfo?.id;
-//   const boardId = url.split("/").pop();
 
   useEffect(() => {
     if (isVisible) {
@@ -37,6 +36,7 @@ const RemoveUserModal = ({ isVisible, onClose, onRemoveUsers }) => {
 
   const handleRemove = () => {
     onRemoveUsers(selectedUsers, boardId);
+    setSearchTerm("");
     onClose();
   };
 
@@ -47,12 +47,12 @@ const RemoveUserModal = ({ isVisible, onClose, onRemoveUsers }) => {
       );
 
       const allUsers = response?.data?.users || [];
-      const currentUser = JSON.parse(localStorage.getItem("user")); // Assuming you store the current user ID in localStorage
-      console.log("cuuuuuuuuuuu:::", currentUser);
+      const currentUser = JSON.parse(localStorage.getItem("user")); 
 
       const filteredUsers = allUsers.filter(
         (user) => user.id !== currentUser?.id
       );
+
       setUsers(filteredUsers);
     } catch (err) {
       console.log(err);
@@ -80,7 +80,7 @@ const RemoveUserModal = ({ isVisible, onClose, onRemoveUsers }) => {
               onChange={handleSearch}
               className="w-full p-2 border border-gray-300 rounded mb-4 text-black"
             />
-            <div className="space-y-2">
+            <div className="max-h-60 overflow-y-auto space-y-2">
               {users
                 .filter((user) =>
                   user?.username
@@ -111,7 +111,10 @@ const RemoveUserModal = ({ isVisible, onClose, onRemoveUsers }) => {
             <div className="mt-4 flex justify-end">
               <button
                 className="px-4 py-2 bg-gray-300 rounded mr-2"
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  setSearchTerm("");
+                }}
               >
                 Cancel
               </button>
