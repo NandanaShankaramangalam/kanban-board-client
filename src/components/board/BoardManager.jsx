@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CreateBoard from "./createBoard";
 import apiClient from "../../api/apiClient";
 import { useNavigate } from "react-router-dom";
-import { Spinner } from "../../utils/utils";
+import { getRandomColor, Spinner } from "../../utils/utils";
 
 const BoardManager = () => {
   const [boards, setBoards] = useState([]);
@@ -45,6 +45,7 @@ const BoardManager = () => {
                 <div
                   className="cursor-pointer border border-gray-300 rounded overflow-hidden bg-white shadow-lg relative"
                   key={board._id}
+                  style={{ backgroundColor: getRandomColor() }}
                   onClick={() => {
                     setSelectedBoard(board);
                     localStorage.setItem(

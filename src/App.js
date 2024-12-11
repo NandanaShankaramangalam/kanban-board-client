@@ -12,6 +12,7 @@ import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/protectedRoute";
 import AuthGuard from "./components/authGuard";
 import ErrorPage from "./components/NotFound";
+import { Spinner } from "./utils/utils";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
   return (
     <>

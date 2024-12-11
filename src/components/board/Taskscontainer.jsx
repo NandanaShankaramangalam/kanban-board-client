@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import apiClient from "../../api/apiClient";
 import TaskViewAndEditModal from "./TaskViewAndEditModal";
-import { getSelectedBoardInfo } from "../../utils/utils";
+import { getSelectedBoardInfo, Spinner } from "../../utils/utils";
 
 const TasksContainer = ({ socket }) => {
   const [tasks, setTasks] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [boardUsers, setBoardUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const boardInfo = getSelectedBoardInfo();
   const boardId = boardInfo?.id;
   const navigate = useNavigate();
@@ -95,6 +96,8 @@ const TasksContainer = ({ socket }) => {
       if (err?.response?.status === 403) {
         navigate("/kanban");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,6 +143,17 @@ const TasksContainer = ({ socket }) => {
       handleCloseModal();
     }
   };
+
+  if (loading) {
+    return (
+      <div className="container">
+        <DragDropContext onDragEnd={() => {}}>
+          <div className="mx-auto"><Spinner /></div>
+          
+        </DragDropContext>
+      </div>
+    );
+  }
 
   return (
     <div className="container">
