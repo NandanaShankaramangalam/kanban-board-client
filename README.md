@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# Collaborative Kanban Board with Chat and AI Bot
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This project is a **Collaborative Kanban Board** application built to enhance task management and team collaboration. It features real-time chat, task management across different board columns, and an integrated AI bot that provides assistance and task summaries.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+### 1. Board Management
+- **Create Kanban boards** with fixed columns: "To Do," "In Progress," and "Done."
+- Add and remove members from the board using a static list of dummy users.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 2. Task Management
+- Create, edit, delete, and move tasks between columns.
+- Assign tasks to members from the predefined user list.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 3. Chat Interface
+- Real-time chat functionality associated with each board.
+- Support for **mentions** (`Shift + @`) to tag users from the member list.
 
-### `npm test`
+### 4. AI Bot Integration
+- Mention the bot (`@AI`) in the chat to:
+  - List tasks pending in the "To Do" column.
+  - Summarize the current state of tasks (e.g., "3 tasks in To Do, 2 in Progress, 1 Done").
+- Integrated with **OpenAI's GPT-3.5 API** for generating responses.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 5. Real-Time Updates
+- Live updates for:
+  - Task movements and changes.
+  - Chat messages and bot responses.
 
-### `npm run build`
+How to start
+1. Run: git clone https://github.com/NandanaShankaramangalam/kanban-board-client.git
+2. CD into the folder
+3. Run: npm install
+4. Run: npm start
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Note: Create a .env file based on .env.example and add your environment variables.
